@@ -11,3 +11,19 @@ export interface User{
     lastname: string;
     authorities: string[];
 }
+
+export interface CreateUser{
+    username: string;
+    password: string;
+    name: string;
+    lastname: string;
+}
+
+export interface Transaction{
+    senderUsername: string;
+    senderName: string;
+    receiverUsername: string;
+    receiverName: string;
+    value: number;
+    createdAt: string;
+}
