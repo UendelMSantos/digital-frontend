@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { authService } from '../services/authService';
-import { apiService } from '../services/apiService';
+import { apiUserService } from '../services/apiUserService';
 import type { User } from '../types/auth';
 
 interface AuthContextType {
@@ -9,6 +9,7 @@ interface AuthContextType {
   login: () => void;
   logout: () => void;
   isAuthenticated: boolean;
+  refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -17,17 +18,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  const refreshUser = async () => {
+    if (authService.isAuthenticated()) {
+      try {
+        const userInfo = await apiUserService.getUserInfo();
+        setUser(userInfo);
+      } catch (error) {
+        console.error('Failed to load user', error);
+        authService.logout();
+        setUser(null);
+      }
+    }
+  };
+
   useEffect(() => {
     async function loadUser() {
-      if (authService.isAuthenticated()) {
-        try {
-          const userInfo = await apiService.getUserInfo();
-          setUser(userInfo);
-        } catch (error) {
-          console.error('Failed to load user', error);
-          authService.logout();
-        }
-      }
+      await refreshUser();
       setIsLoading(false);
     }
 
@@ -52,6 +58,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         login,
         logout,
         isAuthenticated: authService.isAuthenticated(),
+        refreshUser,
       }}
     >
       {children}

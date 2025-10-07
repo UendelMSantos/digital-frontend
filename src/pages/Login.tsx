@@ -1,6 +1,6 @@
 import { useAuth } from '../contexts/AuthContext';
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export function Login(){
     const {login, isAuthenticated } = useAuth();
@@ -26,7 +26,18 @@ export function Login(){
             <p className="text-sm text-gray-600 mt-4 text-center">
               Você será redirecionado para fazer login de forma segura
             </p>
+            <hr className="my-4 border-t border-gray-200" />
+            <p className="text-sm text-gray-600 mt-4 text-center">
+              Ainda não possui uma conta?{" "}
+              <Link 
+                to="/register" 
+                className="text-blue-500 hover:text-blue-700 hover:underline cursor-pointer"
+              >
+                Cadastre-se
+              </Link>
+            </p>
           </div>
+
         </div>
       );
 
