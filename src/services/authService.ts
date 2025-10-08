@@ -1,9 +1,9 @@
 import type { AuthTokens } from "../types/auth";
 const AUTH_CONFIG = {
     clientId: 'wallet-app',
-    authorizationEndpoint: 'http://localhost:8080/oauth2/authorize',
-    tokenEndpoint: 'http://localhost:8080/oauth2/token',
-    redirectUri: 'http://localhost:5173/callback',
+    authorizationEndpoint: `${import.meta.env.VITE_BASE_API_URL_LOCAL}/oauth2/authorize`,
+    tokenEndpoint: `${import.meta.env.VITE_BASE_API_URL_LOCAL}/oauth2/token`,
+    redirectUri: `${import.meta.env.VITE_BASE_URL_APP}/callback`,
     scope: 'openid profile read write',
 };
 
