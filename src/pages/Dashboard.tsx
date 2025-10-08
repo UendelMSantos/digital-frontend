@@ -13,23 +13,24 @@ export function Dashboard() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    async function loadBalance() {
-      if (user) {
-        try {
-          const value = await apiAccountService.getBalance(user.username);
-          setBalance(value);
-
-          const transactionsValues = await apiAccountService.getTransactions(user.username, startDate, endDate);
-          setTransactions(transactionsValues);
-        } catch (error) {
-          console.error('Failed to load balance', error);
-        }
-      }
-    }
-
-    loadTransactions
+    loadTransactions();
     loadBalance();
   }, [user]);
+
+
+  async function loadBalance() {
+    if (user) {
+      try {
+        const value = await apiAccountService.getBalance(user.username);
+        setBalance(value);
+
+        const transactionsValues = await apiAccountService.getTransactions(user.username, startDate, endDate);
+        setTransactions(transactionsValues);
+      } catch (error) {
+        console.error('Failed to load balance', error);
+      }
+    }
+  }
 
   async function loadTransactions() {
     if (!user) return;
@@ -52,7 +53,6 @@ export function Dashboard() {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      {/* NAVBAR */}
       <nav className="bg-white shadow p-4">
         <div className="container mx-auto flex justify-between items-center">
           <h1 className="text-xl font-bold text-blue-700">Digital Wallet</h1>
@@ -65,7 +65,6 @@ export function Dashboard() {
         </div>
       </nav>
 
-      {/* CONTEÚDO */}
       <div className="container mx-auto mt-8 p-4">
         <div className="bg-white rounded-lg shadow p-6 mb-6">
           <h2 className="text-2xl font-bold mb-4">
@@ -82,7 +81,6 @@ export function Dashboard() {
           )}
         </div>
 
-        {/* FILTROS */}
         <div className="bg-white rounded-lg shadow p-6 mb-6">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-xl font-semibold text-gray-700">
@@ -90,7 +88,10 @@ export function Dashboard() {
             </h3>
             <TransactionDialog
               username={user.username}
-              onSuccess={loadTransactions}
+              onSuccess={() => {
+                loadTransactions();
+                loadBalance()
+              }}
             />
             {/* <button
               className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded-lg shadow transition"
@@ -134,7 +135,6 @@ export function Dashboard() {
           </div>
         </div>
 
-        {/* LISTA DE TRANSAÇÕES */}
         <div className="bg-white rounded-lg shadow p-6">
           <h3 className="text-xl font-semibold mb-4 text-gray-700">
             Suas Transações
