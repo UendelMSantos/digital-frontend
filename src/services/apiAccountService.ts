@@ -1,4 +1,4 @@
-import type { Transaction, User } from '../types/auth';
+import type { Transaction } from '../types/auth';
 import api from './axiosConfig';
 
 
